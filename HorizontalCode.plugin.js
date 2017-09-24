@@ -6,7 +6,7 @@ var HorizontalCode = (function (){
   class HorizontalCode {
     getName() { return "HorizontalCode"; }
 
-    getDescription() { return "Horizontal scroll."; }
+    getDescription() { return "Plugin for horizontal Scrolling in Codeblocks. (Made for Infiniti#9714)"; }
 
     getAuthor() { return "spthiel"; };
 
@@ -15,7 +15,15 @@ var HorizontalCode = (function (){
     load(){}
 
     start() {
-      //scrollH();
+      if (document.getElementById('app-mount').addEventListener) {
+          // IE9, Chrome, Safari, Opera
+          document.getElementById('app-mount').addEventListener("mousewheel", scrollHorizontally, false);
+          // Firefox
+          document.getElementById('app-mount').addEventListener("DOMMouseScroll", scrollHorizontally, false);
+      } else {
+          // IE 6/7/8
+          document.getElementById('app-mount').attachEvent("onmousewheel", scrollHorizontally);
+      }
     }
 
     stop() {
@@ -30,35 +38,26 @@ var HorizontalCode = (function (){
     
     var x = e.clientX,
         y = e.clientY,
-        stack = [],
         elementMouseIsOver = document.elementFromPoint(x, y);
 
-    stack.push(elementMouseIsOver);
 
     var currentStack = 0;
-    var maxStack = 4;
+    var maxStack = 10;
     
     while (elementMouseIsOver.tagName !== 'HTML' && currentStack <= maxStack){
 
         currentStack = currentStack + 1;
     
-        elementMouseIsOver.style.pointerEvents = 'none';
-        elementMouseIsOver = document.elementFromPoint(x, y);
-
-        stack.push(elementMouseIsOver);
-        
         if(elementMouseIsOver.tagName == 'CODE'){
-          break;
+          return elementMouseIsOver;
         }
-    }
-    var i  = 0,
-        il = stack.length;
+        
+        elementMouseIsOver = elementMouseIsOver.parentElement;
 
-    for (; i < il; i += 1) {
-        stack[i].style.pointerEvents = '';
+        
     }
 
-    return elementMouseIsOver.tagName == 'CODE' ? elementMouseIsOver : null;
+    return null;
   }
   
   function scrollHorizontally(e) {
@@ -69,15 +68,6 @@ var HorizontalCode = (function (){
           elementToScroll.scrollLeft -= (delta*40); // Multiplied by 40
           e.preventDefault();
         }
-  }
-  if (document.getElementById('app-mount').addEventListener) {
-      // IE9, Chrome, Safari, Opera
-      document.getElementById('app-mount').addEventListener("mousewheel", scrollHorizontally, false);
-      // Firefox
-      document.getElementById('app-mount').addEventListener("DOMMouseScroll", scrollHorizontally, false);
-  } else {
-      // IE 6/7/8
-      document.getElementById('app-mount').attachEvent("onmousewheel", scrollHorizontally);
   }
 
   return HorizontalCode;
