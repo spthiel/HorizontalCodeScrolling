@@ -6,7 +6,7 @@ var HorizontalCode = (function (){
   class HorizontalCode {
     getName() { return "HorizontalCode"; }
 
-    getDescription() { return "Plugin for SparklingSkull."; }
+    getDescription() { return "Horizontal scroll."; }
 
     getAuthor() { return "spthiel"; };
 
